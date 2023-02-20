@@ -14,13 +14,13 @@ public class OAuthAttributes { // OAuth2User의 return 값은 Map 형태이므�
 
     private Map<String, Object> attributes;
     private String nameAttributeKey;
-    private Long uniqueId;
+    private String uniqueId;
     private String email;
     private String nickname;
 
     @Builder
     public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey,
-                           Long uniqueId, String email, String nickname) {
+                           String uniqueId, String email, String nickname) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.uniqueId = uniqueId;
@@ -40,7 +40,7 @@ public class OAuthAttributes { // OAuth2User의 return 값은 Map 형태이므�
         Map<String, Object> profile = (Map<String, Object>)kakaoAccount.get("profile");
 
         return OAuthAttributes.builder()
-                .uniqueId((Long) attributes.get("id"))
+                .uniqueId(attributes.get("id").toString())
                 .email((String) kakaoAccount.get("email"))
                 .nickname((String) profile.get("nickname"))
                 .nameAttributeKey(nameAttributeName)

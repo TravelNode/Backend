@@ -95,7 +95,7 @@ public class JwtTokenProvider { // 유효한 JWT Token 생성
     private void saveRefreshToken(Authentication authentication, String refreshToken,
                                   String accessToken) throws Exception {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        Long uniqueId = userPrincipal.getUniqueId();
+        String uniqueId = userPrincipal.getUniqueId();
 
         User targetUser = userRepository.findByUniqueId(uniqueId);
         if(targetUser == null) {
@@ -105,7 +105,11 @@ public class JwtTokenProvider { // 유효한 JWT Token 생성
         Token refresh = Token.builder().accessToken(accessToken)
                 .user(targetUser).refreshToken(refreshToken).build();
 
-        tokenRepository.save(refresh);
+        Token toDelete = tokenRepository.findByUniqueId(uniqueId);
+        if(toDelete != null) {
+            tokenRepository.delete(toDelete); // 토큰을 새로 발급받은 경우, 기존에 있던 토큰 삭제
+        }
+        tokenRepository.save(refresh); // 새로 발급받은 토큰 저장
     }
 
     // Request에 포함된 JWT Token (Access Token)으로 인증 정보 조회 및 Authentication 객체 생성
@@ -116,10 +120,8 @@ public class JwtTokenProvider { // 유효한 JWT Token 생성
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new).toList();
 
-        System.out.println(claims.getSubject());
-        System.out.println(authorities.getClass().getName());
-        User principal = new User(claims.getSubject(), "", authorities);
-        // UserPrincipal userPrincipal = new UserPrincipal();
+        User user = userRepository.findByUniqueId(claims.getSubject());
+        UserPrincipal principal = UserPrincipal.create(user);
 
         return new UsernamePasswordAuthenticationToken(principal, accessToken, authorities);
         // JwtAuthenticationFilter에서 입력받은 Access Token + 유저 정보로 Authentication 객체 생성 및 리턴

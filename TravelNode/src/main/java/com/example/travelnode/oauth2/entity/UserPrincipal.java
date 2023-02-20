@@ -18,7 +18,7 @@ import java.util.Map;
 @Getter
 public class UserPrincipal implements OAuth2User, UserDetails {
     private final Long uid;
-    private final Long uniqueId;
+    private final String uniqueId;
     private final String email;
     private final String nickname;
     private final RoleType roleType;
@@ -29,7 +29,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private Map<String, Object> attributes;
     private static Token token;
 
-    public UserPrincipal(Long uid, Long uniqueId, String email, String nickname, RoleType roleType,
+    public UserPrincipal(Long uid, String uniqueId, String email, String nickname, RoleType roleType,
                          ProviderType providerType, Collection<GrantedAuthority> authorities) {
         this.uid = uid;
         this.uniqueId = uniqueId;
@@ -53,6 +53,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
         UserPrincipal userPrincipal = UserPrincipal.create(user);
         userPrincipal.setAttributes(attributes);
+
         return userPrincipal;
     }
 
@@ -109,7 +110,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         return email;
     }
 
-    public Long getUniqueId() {
+    public String getUniqueId() {
         return uniqueId;
     }
 

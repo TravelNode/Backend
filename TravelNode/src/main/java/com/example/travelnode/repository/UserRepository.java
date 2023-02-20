@@ -21,5 +21,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE u.uniqueId = ?1")
-    User findByUniqueId(Long uniqueId);
+    User findByUniqueId(String uniqueId);
 }

@@ -1,6 +1,7 @@
 package com.example.travelnode.oauth2.service;
 
 import com.example.travelnode.entity.User;
+import com.example.travelnode.oauth2.entity.UserPrincipal;
 import com.example.travelnode.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Cannot find User Information");
         }
 
-        return (UserDetails)userRepository.save(user);
+        return UserPrincipal.create(user);
     }
 }

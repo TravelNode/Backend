@@ -19,23 +19,15 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long imgId;
 
-    @OneToOne
-    @JoinColumn(name = "avatarId")
-    private Avatar avatar;
-
-    @OneToOne
-    @JoinColumn(name = "preferId")
-    private PreferenceList preferenceList;
-
     @JsonIgnore
     @Column(name = "IMG_NAME")
-    private String fileName;
+    private String imgName;
 
     @JsonIgnore
     @Column(name = "IMG_KEY")
-    private String fileKey;
+    private String imgKey;
 
     @NotNull
-    @Column(name = "IMG_PATH")
-    private String filePath;
+    @Column(name = "IMG_URL")
+    private String imgUrl;
 }
