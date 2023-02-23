@@ -1,6 +1,6 @@
 package com.example.travelnode.dto;
 
-import com.example.travelnode.entity.Avatar;
+
 import com.example.travelnode.entity.ProviderType;
 import com.example.travelnode.entity.RoleType;
 import com.example.travelnode.entity.User;

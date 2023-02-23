@@ -23,4 +23,10 @@ public class UserController {
 
         return userPrincipal;
     }
+
+    // 시작시 테스트용
+    @GetMapping("/show")
+    public String showStart(){
+        return "Success";
+    }
 }

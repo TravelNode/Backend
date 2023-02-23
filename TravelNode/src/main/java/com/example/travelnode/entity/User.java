@@ -54,10 +54,10 @@ public class User {
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    // @NotNull
-    @ManyToOne
-    @JoinColumn(name = "AVATAR_ID", foreignKey = @ForeignKey(name = "fk_user_avatarId"))
-    private Avatar avatar;
+//    // @NotNull
+//    @ManyToOne
+//    @JoinColumn(name = "AVATAR_ID") // foreignKey = @ForeignKey(name = "fk_user_avatarId")
+//    private Avatar avatar;
 
     @NotNull
     @ColumnDefault("0")
