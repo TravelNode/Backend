@@ -4,10 +4,12 @@ import com.example.travelnode.dto.UserInfoDto;
 import com.example.travelnode.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.awt.print.Pageable;
 import java.util.List;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u.uid, u.email, u.nickname, u.roleType, u.providerType, u.createdAt, " +
