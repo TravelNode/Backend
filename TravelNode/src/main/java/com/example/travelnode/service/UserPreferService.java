@@ -28,18 +28,23 @@ public class UserPreferService {
         upRepository.save(dto.toEntity());
     }
 
+    public List<PreferenceList> findAllPrefers(){
+        return listRepository.findAll();
+    }
+
     // PreferenceList DB에서 prefer_id로 description 찾기
     public String findDescription(Long prefer_id){
         PreferenceList pl = listRepository.findById(prefer_id).get();
         return pl.getDescription();
     }
 
+    // PreferenceList DB에서 prefer_id로 question_id 찾기
     public Integer findQuestionID(Long prefer_id){
         PreferenceList pl = listRepository.findById(prefer_id).get();
         return pl.getQuestion_id();
     }
 
-    // User 정보 받아서 User의 Prefer정보 get 하기
+    // User 정보 받아서 -> User의 Prefer정보 get 하기
     public List<UserPreference> findAllList(Long uid){
         User user = userRepository.getReferenceById(uid);
         user.getPrefer_list();

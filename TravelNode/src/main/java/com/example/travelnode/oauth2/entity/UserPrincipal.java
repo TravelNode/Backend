@@ -23,8 +23,8 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private final String nickname;
     private final RoleType roleType;
     private final ProviderType providerType;
-    //private final String accessToken;
-    //private final String refreshToken;
+    // private final String accessToken;
+    // private final String refreshToken;
     private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
     private static Token token;
