@@ -1,9 +1,9 @@
 
 package com.example.travelnode.entity;
 
-import com.example.travelnode.dto.CityUpdateRequestDto;
 import com.example.travelnode.dto.RouteDayUpdateRequestDto;
 import com.example.travelnode.dto.RouteNameUpdateRequestDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +14,7 @@ import org.hibernate.annotations.DynamicInsert;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Entity
 @Getter
@@ -61,12 +59,13 @@ public class Route {
     private Integer scrapCount;
 
     //@NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     @Column(name = "ROUTE_DAY")
     private LocalDate routeDay;
 
     //@ColumnDefault("false")
-    @Column(name = "IS_OPEN")
-    private Boolean isOpened;
+    @Column(name = "IS_PRIVATE")
+    private Boolean isPrivate;
 
     @ColumnDefault("false")
     @Column(name = "IS_FOLLOWING")
@@ -85,38 +84,39 @@ public class Route {
     }
 
     @Builder
-    public Route(City city, KeywordList keyword1, KeywordList keyword2, String routeName, LocalDate routeDay, boolean isOpened ) {
-        //this.user = user; 유저 정보 필요 없음
+    public Route(City city, KeywordList keyword1, KeywordList keyword2, String routeName,
+                 LocalDate routeDay, boolean isPrivate ) {
+        // this.user = user;
         this.city = city;
         this.keyword1 = keyword1;
         this.keyword2 = keyword2;
         this.routeName = routeName;
         this.routeDay = routeDay;
-        this.isOpened = isOpened;
-
+        this.isPrivate = isPrivate;
     }
 
     // 도시, 키워드 수정 부분 --> 엔티티라 this.city = dto.getCityId(); 가 안됨...
-    public void updatecity(City city){
+    public void updateCity(City city){
         this.city = city;
     }
 
-    public void updateroutename(RouteNameUpdateRequestDto dto) {
-
+    public void updateRouteName(RouteNameUpdateRequestDto dto) {
         this.routeName = dto.getRouteName();
     }
 
-
-    public void updaterouteday(RouteDayUpdateRequestDto dto) {
+    public void updateRouteDay(RouteDayUpdateRequestDto dto) {
         this.routeDay = dto.getRouteDay();
     }
 
-    public void updatekeyword(KeywordList keyword1, KeywordList keyword2) {
-        this.keyword1 = keyword1;
-        this.keyword2 = keyword2;
+    public void updateKeyword1(KeywordList keyword) {
+        this.keyword1 = keyword;
     }
 
-    public void updaterouteopen(boolean isOpened) {
-        this.isOpened = isOpened;
+    public void updateKeyword2(KeywordList keyword) {
+        this.keyword2 = keyword;
+    }
+
+    public void updateRoutePrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 }

@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface SpotInfoRepository extends JpaRepository<SpotInfo, Long> {
 
-    @Query("SELECT sp FROM SpotInfo sp WHERE sp.spotName = ?1")
+    @Query("SELECT sp FROM SpotInfo sp WHERE REPLACE(sp.spotName, ' ', '') = ?1")
     SpotInfo findSpotInfoBySpotName(String spotName);
 }

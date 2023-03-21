@@ -60,11 +60,7 @@ public class SecurityConfig {
                 .authorizeRequests()  // 인증된 유저만 접근 가능
                 // CORS Preflight Request에 대해서는 spring security를 적용하지 않음
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-
-                .antMatchers("/*","/**", "/api/v1/**", "/login/oauth2/**").permitAll()
-
                 .antMatchers("/**", "/api/v1/**", "/login/oauth2/**").permitAll()
-
                 // 로그인 URL과 Home URL에는 모든 사용자가 접근 가능
                 .antMatchers(HttpMethod.POST, "/api/**")
                 .hasAnyRole("USER", "ADMIN")

@@ -3,6 +3,7 @@ package com.example.travelnode.controller;
 import com.example.travelnode.dto.SpotInfoDto;
 import com.example.travelnode.entity.RoleType;
 import com.example.travelnode.entity.SpotInfo;
+import com.example.travelnode.entity.User;
 import com.example.travelnode.oauth2.entity.UserPrincipal;
 import com.example.travelnode.service.SpotService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,15 @@ public class SpotController {
     private final SpotService spotService;
 
     @GetMapping("/list")
-    public List<SpotInfo> getSpotLists() {
+    public List<SpotInfo> getSpotLists(@AuthenticationPrincipal UserPrincipal userPrincipal) throws Exception {
+
+        if(userPrincipal == null) {
+            throw new Exception("No User Information");
+        }
+
+        if(Objects.equals(userPrincipal.getRoleType().getCode(), RoleType.USER.getCode())) {
+            throw new Exception("Do not have authority");
+        }
 
         return spotService.getAllSpots();
     }

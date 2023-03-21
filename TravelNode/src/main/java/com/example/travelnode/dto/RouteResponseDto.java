@@ -8,13 +8,13 @@ import java.time.LocalDate;
 @Getter
 public class RouteResponseDto {
 
-    private Long id;
-    private Long cityId;
-    private Long keyword1;
-    private Long keyword2;
-    private String routeName;
-    private LocalDate routeDay;
-    private boolean open;
+    private final Long id;
+    private final Long cityId;
+    private final Long keyword1;
+    private final Long keyword2;
+    private final String routeName;
+    private final LocalDate routeDay;
+    private final boolean open;
 
     public RouteResponseDto(Route entity){
         this.id = entity.getRouteId();
@@ -23,7 +23,7 @@ public class RouteResponseDto {
         this.keyword2 = entity.getKeyword2().getKeyId();
         this.routeName = entity.getRouteName();
         this.routeDay = entity.getRouteDay();
-        this.open = entity.getIsOpened();
+        this.open = entity.getIsPrivate();
     }
 
 

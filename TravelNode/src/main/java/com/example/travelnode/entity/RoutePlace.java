@@ -1,7 +1,10 @@
 package com.example.travelnode.entity;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,6 +12,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@DynamicUpdate
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ROUTE_PLACE")
 public class RoutePlace {
 
@@ -45,10 +50,6 @@ public class RoutePlace {
         this.route = route;
         this.priority = priority;
         this.visitTime = visitTime != null ? visitTime : LocalDateTime.now();
-    }
-
-    @Builder
-    public RoutePlace() {
     }
 
     public void update(String placeName) {
