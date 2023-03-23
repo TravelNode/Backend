@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -21,6 +22,11 @@ public class RoutePlace {
     @Column(name = "PLACE_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long placeId;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "UID", foreignKey = @ForeignKey(name = "fk_place_user"))
+    private User user;
 
     @NotNull
     @ManyToOne
@@ -44,7 +50,15 @@ public class RoutePlace {
     private LocalDateTime visitTime;
 
     @Builder
-    public RoutePlace(@NotNull SpotInfo spot, @NotNull String placeName, @NotNull Route route, @NotNull Integer priority, LocalDateTime visitTime) {
+    public RoutePlace(@NotNull User user, @NotNull SpotInfo spot, @NotNull String placeName,
+                      @NotNull Route route, @NotNull Integer priority, LocalDateTime visitTime) {
+        Assert.hasText(String.valueOf(user), "User must not be empty");
+        Assert.hasText(String.valueOf(spot), "Spot Info must not be empty");
+        Assert.hasText(placeName, "Place Name must not be empty");
+        Assert.hasText(String.valueOf(route), "Route must not be empty");
+        Assert.hasText(String.valueOf(priority), "Priority must not be empty");
+
+        this.user = user;
         this.spot = spot;
         this.placeName = placeName;
         this.route = route;

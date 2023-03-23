@@ -35,8 +35,9 @@ public class Image {
     private String imgUrl;
 
     @Builder
-    public Image(Review review, String imgName, String imgUrl) {
+    public Image(Review review, String imgName, String imgKey, String imgUrl) {
         this.review = review;
+        this.imgKey = imgKey;
         this.imgName = imgName;
         this.imgUrl = imgUrl;
     }

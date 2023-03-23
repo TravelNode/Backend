@@ -18,8 +18,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ReviewController {
 
-    private final ReviewService service;
+    private final ReviewService reviewService;
     private final UserService userService;
-
-
 }

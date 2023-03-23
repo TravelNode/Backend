@@ -5,9 +5,11 @@ import com.example.travelnode.dto.ReviewRequestDto;
 import com.example.travelnode.entity.Comment;
 import com.example.travelnode.entity.Image;
 import com.example.travelnode.entity.Review;
+import com.example.travelnode.entity.User;
 import com.example.travelnode.repository.CommentRepository;
 import com.example.travelnode.repository.ImageRepository;
 import com.example.travelnode.repository.ReviewRepository;
+import com.example.travelnode.repository.RoutePlaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,29 +23,34 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReviewService {
 
-    private final ReviewRepository repository;
+    private final ReviewRepository reviewRepository;
+    private final RoutePlaceRepository routePlaceRepository;
     private final CommentRepository commentRepository;
     private final ImageRepository imgRepository;
     private final S3Uploader uploader;
 
-    /**
     @Transactional
-    public Review registerReview(ReviewRequestDto reviewDto, Long placeId) throws IOException {
-        List<Image> reviewImgs = new ArrayList<>();
+    public Review registerReview(ReviewRequestDto reviewDto, List<MultipartFile> reviewImgs,
+                                 Long placeId, User user) throws IOException {
 
-        for(int i=0; i<reviewDto.getImages().size(); i++) {
-            String filename = uploader.upload(reviewDto.getImages().get(i), "reviews");
-            String imgName = reviewDto.getImages().get(i).getOriginalFilename();
-            String imgKey = reviewDto.getImages().get(i).getContentType();
-            String imgUrl = filename;
+        // 이미지를 제외한 리뷰 먼저 저장
+        Review review = Review.builder().user(user).routePlace(routePlaceRepository.findById(placeId).orElseThrow()).
+                         comment(commentRepository.findById(reviewDto.getCommentId()).orElseThrow()).
+                         reviewText(reviewDto.getReviewText()).build();
+        reviewRepository.save(review);
 
-            Image image = Image.builder().review().build();
+        // 리뷰 객체에 이미지 업데이트
+        List<Image> images = new ArrayList<>();
+        for (MultipartFile reviewImg : reviewImgs) {
+            String filename = uploader.upload(reviewImg, "reviews");
+            String imgName = reviewImg.getOriginalFilename();
+            String imgKey = reviewImg.getContentType();
+            Image image = Image.builder().review(review).imgName(imgName).imgKey(imgKey).imgUrl(filename).build();
+            images.add(image);
         }
 
-        imgRepository.save(image1); // 이미지 먼저 저장
-        Review review = dto.toEntity();
-        review.saveImage(image1);
-        repository.save(review); // 리뷰 저장
+        List<Image> imageList = imgRepository.saveAll(images);
+        review.saveImage(imageList);
 
         return review;
     }
@@ -52,5 +59,4 @@ public class ReviewService {
     public Comment findComment(Long comment_id){
         return commentRepository.getReferenceById(comment_id);
     }
-    **/
 }

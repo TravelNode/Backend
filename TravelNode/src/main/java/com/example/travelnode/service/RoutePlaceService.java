@@ -6,9 +6,11 @@ import com.example.travelnode.dto.SpotInfoDto;
 import com.example.travelnode.entity.Route;
 import com.example.travelnode.entity.RoutePlace;
 import com.example.travelnode.entity.SpotInfo;
+import com.example.travelnode.entity.User;
 import com.example.travelnode.repository.RoutePlaceRepository;
 import com.example.travelnode.repository.RouteRepository;
 import com.example.travelnode.repository.SpotInfoRepository;
+import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -117,9 +119,10 @@ public class RoutePlaceService {
     }
 
     @Transactional
-    public RoutePlace registerRoutePlace(PlaceRegisterRequestDto placeRegisterRequestDto, Route route) throws Exception {
+    public RoutePlace registerRoutePlace(PlaceRegisterRequestDto placeRegisterRequestDto,
+                                         Route route, User user) throws Exception {
         if(route == null) {
-            throw new Exception("해당 루트가 존재하지 않습니다.");
+            throw new NullPointerException("존재하지 않는 루트입니다.");
         }
 
         String spotName = placeRegisterRequestDto.getSpotName().replaceAll(" ", "").trim();
@@ -134,20 +137,10 @@ public class RoutePlaceService {
             spot = spotInfoRepository.save(spotInfoDto.toEntity());
         }
 
-        RoutePlaceDto routePlaceDto = RoutePlaceDto.builder().spot(spot).placeName(spotName).route(route)
-                .priority(placeRegisterRequestDto.getPriority()).visitTime(LocalDateTime.now()).build();
+        RoutePlace routePlace = RoutePlace.builder().user(user).spot(spot).placeName(spotName).route(route)
+                .priority(placeRegisterRequestDto.getPriority()).visitTime(placeRegisterRequestDto.getVisitTime()).build();
 
-        return routePlaceRepository.save(routePlaceDto.toEntity());
-    }
-
-    public Boolean isSamePlace(String loc, String spotName) {
-        if(spotName == null) return false;
-        // 오타를 고려하여 사용자가 입력한 값과 지도 API로 검색된 값이 2글자 이상 다를 경우 같은 장소가 아닌 것으로 판단
-        // -> DB에 저장된 장소 정보를 쓰지 않고 지도 API에서 새로 장소 정보 검색
-        loc = loc.replaceAll(" ", "").trim();
-        spotName = spotName.replaceAll(" ", "").trim();
-
-        return loc.equals(spotName);
+        return routePlaceRepository.save(routePlace);
     }
 
     @Transactional
@@ -169,7 +162,7 @@ public class RoutePlaceService {
         // 장소가 삭제된 후, 같은 루트에 포함된 다른 장소들의 priority 재설정
         for(int i=priority+1; i<=5; i++) {
             RoutePlace routePlace = routePlaceRepository.findByRouteAndPriority(route, i)
-                    .orElseThrow(() -> new RuntimeException("루트에 포함된 마지막 장소입니다."));
+                    .orElseThrow(() -> new IOException("루트에 포함된 마지막 장소입니다."));
 
             routePlace.changePriority(routePlace.getPriority()-1);
         }
@@ -179,7 +172,7 @@ public class RoutePlaceService {
     public List<RoutePlace> allPlacesInRoute(String routeName) {
 
         Route route = routeRepository.findRouteByRouteName(routeName)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 루트입니다."));
+                .orElseThrow(() -> new NullPointerException("존재하지 않는 루트입니다."));
 
         return routePlaceRepository.findAllPlacesByRoute(route);
     }

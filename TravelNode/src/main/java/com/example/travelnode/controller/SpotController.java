@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,7 +55,7 @@ public class SpotController {
                                    @RequestParam String prevName, @RequestParam String spotName) throws Exception {
 
         if(userPrincipal == null) {
-            throw new Exception("No User Information");
+            throw new UserPrincipalNotFoundException("No User Information");
         }
 
         if(Objects.equals(userPrincipal.getRoleType().getCode(), RoleType.USER.getCode())) {
