@@ -61,10 +61,8 @@ public class RouteController {
                                     route, route.getUser());
             log.trace(String.valueOf(routePlace));
 
-            // 현재 장소에 리뷰를 입력하지 않은 경우 리뷰를 저장하지 않음
+            // index에 따라 review와 image 저장
             ReviewRequestDto reviewDto = requestDto.getReviews().get(i);
-            if(reviewDto.getCommentId() == null && reviewDto.getReviewText() == null) { continue; }
-
             Review review;
             if(i == 0) {
                 review = reviewService.registerReview(reviewDto, reviewImgs1, routePlace.getPlaceId(), route.getUser());

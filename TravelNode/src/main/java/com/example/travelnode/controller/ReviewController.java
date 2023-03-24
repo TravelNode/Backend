@@ -25,13 +25,13 @@ public class ReviewController {
         return reviewService.reviewDetails(reviewId);
     }
 
-    @PutMapping("/update/comment/{reviewId}")
+    @PatchMapping("/update/comment/{reviewId}")
     public Comment updateComment(@PathVariable Long reviewId, @RequestBody Long commentId) {
 
         return reviewService.changeComment(reviewId, commentId);
     }
 
-    @PutMapping("/update/review-text/{reviewId}")
+    @PatchMapping("/update/review-text/{reviewId}")
     public String updateReviewText(@PathVariable Long reviewId, @RequestBody String reviewText) {
 
         return reviewService.changeReviewText(reviewId, reviewText);

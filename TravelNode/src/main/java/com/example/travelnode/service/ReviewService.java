@@ -39,15 +39,32 @@ public class ReviewService {
     public Review registerReview(ReviewRequestDto reviewDto, List<MultipartFile> reviewImgs,
                                  Long placeId, User user) throws IOException {
 
+        // 한줄 소감, 리뷰 본문, 사진 데이터가 모두 없는 경우 다른 로직을 수행하지 않고 null 리턴
+        if(reviewDto.getCommentId() == null && reviewDto.getReviewText() == null &&
+                reviewImgs.get(0).isEmpty()) { return null; }
+
+        // 한줄 소감을 입력하지 않은 경우 (리뷰 본문을 입력하지 않은 경우는 null으로 저장 가능)
+        Review review;
+        if(reviewDto.getCommentId() == null) {
+            review = Review.builder().user(user).routePlace(routePlaceRepository.findById(placeId).orElseThrow()).
+                     reviewText(reviewDto.getReviewText()).build();
+        }
+        else {
+            review = Review.builder().user(user).routePlace(routePlaceRepository.findById(placeId).orElseThrow()).
+                     comment(commentRepository.findById(reviewDto.getCommentId()).orElseThrow()).
+                     reviewText(reviewDto.getReviewText()).build();
+        }
+
         // 이미지를 제외한 리뷰 먼저 저장
-        Review review = Review.builder().user(user).routePlace(routePlaceRepository.findById(placeId).orElseThrow()).
-                         comment(commentRepository.findById(reviewDto.getCommentId()).orElseThrow()).
-                         reviewText(reviewDto.getReviewText()).build();
         reviewRepository.save(review);
+
+        // 리뷰 본문 or 한줄 소감만 입력하고 사진을 입력하지 않는 경우 image 관련 작업을 수행하지 않고 바로 return
+        if(reviewImgs.get(0).isEmpty()) { return review; }
 
         // 리뷰 객체에 이미지 업데이트
         List<Image> images = new ArrayList<>();
         for (MultipartFile reviewImg : reviewImgs) {
+            System.out.println(reviewImg);
             String filename = uploader.upload(reviewImg, "reviews");
             String imgName = reviewImg.getOriginalFilename();
             String imgKey = reviewImg.getContentType();
