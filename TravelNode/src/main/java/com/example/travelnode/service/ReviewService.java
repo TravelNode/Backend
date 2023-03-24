@@ -30,6 +30,12 @@ public class ReviewService {
     private final S3Uploader uploader;
 
     @Transactional
+    public Review reviewDetails(Long reviewId) {
+        return reviewRepository.findById(reviewId).orElseThrow(() ->
+                new IllegalArgumentException(("해당 리뷰가 존재하지 않습니다.")));
+    }
+
+    @Transactional
     public Review registerReview(ReviewRequestDto reviewDto, List<MultipartFile> reviewImgs,
                                  Long placeId, User user) throws IOException {
 
@@ -56,7 +62,31 @@ public class ReviewService {
     }
 
     @Transactional
-    public Comment findComment(Long comment_id){
-        return commentRepository.getReferenceById(comment_id);
+    public Comment changeComment(Long reviewId, Long commentId){
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() ->
+                new IllegalArgumentException(("해당 리뷰가 존재하지 않습니다.")));
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
+        review.changeComment(comment);
+
+        return review.getComment();
+    }
+
+    @Transactional
+    public String changeReviewText(Long reviewId, String reviewText) {
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() ->
+                new IllegalArgumentException(("해당 리뷰가 존재하지 않습니다.")));
+
+        review.changeReviewText(reviewText);
+        return review.getReviewText();
+    }
+
+    // 이미지 수정 method 필요
+
+    @Transactional
+    public void deleteReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).orElseThrow(
+                () -> new IllegalArgumentException(("해당 리뷰가 존재하지 않습니다.")));
+
+        reviewRepository.delete(review);
     }
 }

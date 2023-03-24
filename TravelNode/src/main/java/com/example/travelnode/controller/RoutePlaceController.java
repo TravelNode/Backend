@@ -1,11 +1,9 @@
 package com.example.travelnode.controller;
 
-import com.example.travelnode.dto.PlaceRegisterRequestDto;
 import com.example.travelnode.dto.SpotInfoDto;
 import com.example.travelnode.entity.RoutePlace;
 import com.example.travelnode.service.RoutePlaceService;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;

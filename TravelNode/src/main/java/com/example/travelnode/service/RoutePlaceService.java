@@ -1,7 +1,6 @@
 package com.example.travelnode.service;
 
 import com.example.travelnode.dto.PlaceRegisterRequestDto;
-import com.example.travelnode.dto.RoutePlaceDto;
 import com.example.travelnode.dto.SpotInfoDto;
 import com.example.travelnode.entity.Route;
 import com.example.travelnode.entity.RoutePlace;
@@ -26,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service

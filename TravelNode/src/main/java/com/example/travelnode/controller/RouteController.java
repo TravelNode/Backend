@@ -6,9 +6,9 @@ import com.example.travelnode.oauth2.entity.UserPrincipal;
 import com.example.travelnode.service.ReviewService;
 import com.example.travelnode.service.RoutePlaceService;
 import com.example.travelnode.service.RouteService;
-import com.example.travelnode.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,12 +29,11 @@ public class RouteController {
     private final RouteService routeService;
     private final RoutePlaceService routePlaceService;
     private final ReviewService reviewService;
-    private final UserService userService;
 
-    @GetMapping("/{id}") // 루트 조회
-    public RouteResponseDto searchRouteById(@PathVariable Long id) {
+    @GetMapping("/{routeId}") // 루트 조회
+    public RouteResponseDto routeDetails(@PathVariable Long routeId) {
 
-        return routeService.searchByRouteId(id);
+        return routeService.searchByRouteId(routeId);
     }
 
     // 루트 + 장소정보 + 각 장소에 대한 리뷰 모두 등록
@@ -87,39 +86,40 @@ public class RouteController {
         return route;
     }
 
-    @PatchMapping("/update/{routeId}/city") // 루트도시 수정
+    @PatchMapping("/update/city/{routeId}") // 루트도시 수정
     public City updateCity(@PathVariable Long routeId, @RequestParam Long cityId) {
 
         return routeService.updateCity(routeId, cityId);
     }
 
-    @PatchMapping("/update/{routeId}/keyword") // 루트키워드 수정
+    @PatchMapping("/update/keyword/{routeId}") // 루트키워드 수정
     public KeywordList updateKeyword(@PathVariable Long routeId, @RequestParam Long currentKey, @RequestParam Long newKey) {
 
         return routeService.updateKeyword(routeId, currentKey, newKey);
     }
 
-    @PatchMapping("/update/route-name/{id}") // 루트이름 수정
-    public String updateRouteName(@PathVariable Long id, @RequestParam String routeName) {
+    @PatchMapping("/update/name/{routeId}") // 루트이름 수정
+    public String updateRouteName(@PathVariable Long routeId, @RequestBody String routeName) {
 
-        return routeService.updateRouteName(id, routeName);
+        return routeService.updateRouteName(routeId, routeName);
     }
 
-    @PatchMapping("/update/route-date/{id}") // 루트날짜 수정
-    public LocalDate updateDay(@PathVariable Long id, @RequestParam LocalDate routeDay) {
+    @PatchMapping("/update/date/{routeId}") // 루트날짜 수정
+    public LocalDate updateDay(@PathVariable Long routeId, @RequestBody @DateTimeFormat(
+            pattern = "yyyy-MM-dd") LocalDate routeDay) {
 
-        return routeService.updateRouteDay(id, routeDay);
+        return routeService.updateRouteDay(routeId, routeDay);
     }
 
-    @PatchMapping("/update/route-private/{id}") // 루트 공개여부 결정
-    public Boolean updatePrivate(@PathVariable Long id, @RequestParam Boolean isPrivate) {
+    @PatchMapping("/update/is-private/{routeId}") // 루트 공개여부 결정
+    public Boolean updatePrivate(@PathVariable Long routeId, @RequestBody Boolean isPrivate) {
 
-        return routeService.updateRoutePrivate(id, isPrivate);
+        return routeService.updateRoutePrivate(routeId, isPrivate);
     }
 
-    @DeleteMapping("delete/route/{id}") // 루트 전체 삭제
-    public void deleteRoute(@PathVariable Long id){
+    @DeleteMapping("/delete/{routeId}") // 루트 삭제
+    public void deleteRoute(@PathVariable Long routeId){
 
-        routeService.deleteRoute(id);
+        routeService.deleteRoute(routeId);
     }
 }

@@ -50,9 +50,9 @@ public class Review {
         Assert.hasText(String.valueOf(user), "User must not be empty");
         Assert.hasText(String.valueOf(routePlace), "RoutePlace must not be empty");
 
-        this.user = user; // user_id
+        this.user = user;
         this.routePlace = routePlace;
-        this.comment = comment; // comment_id
+        this.comment = comment;
         this.reviewText = reviewText;
     }
 
@@ -62,5 +62,13 @@ public class Review {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void changeComment(Comment comment) {
+        this.comment = comment;
+    }
+
+    public void changeReviewText(String reviewText) {
+        this.reviewText = reviewText;
     }
 }

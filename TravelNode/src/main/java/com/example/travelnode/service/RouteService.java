@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +27,8 @@ public class RouteService {
 
 
     @Transactional // 루트별 조회
-    public RouteResponseDto searchByRouteId(Long id) {
-        Route route = routeRepository.findById(id)
+    public RouteResponseDto searchByRouteId(Long routeId) {
+        Route route = routeRepository.findById(routeId)
                 .orElseThrow(() -> new IllegalArgumentException(("해당 루트가 존재하지 않습니다.")));
         return new RouteResponseDto(route);
     }
@@ -60,8 +59,8 @@ public class RouteService {
     }
 
     @Transactional // 루트 키워드 수정
-    public KeywordList updateKeyword(Long id, Long currentKey, Long newKey) {
-        Route route = routeRepository.findById(id)
+    public KeywordList updateKeyword(Long routeId, Long currentKey, Long newKey) {
+        Route route = routeRepository.findById(routeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 루트가 존재하지 않습니다."));
 
         KeywordList keyword = keywordRepository.findById(newKey).orElseThrow();
@@ -74,38 +73,38 @@ public class RouteService {
     }
 
     @Transactional
-    public String updateRouteName(Long id, String routeName) {
-        Route route = routeRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException(("해당 Route 가  존재하지 않습니다.")));
+    public String updateRouteName(Long routeId, String routeName) {
+        Route route = routeRepository.findById(routeId).orElseThrow(
+                () -> new IllegalArgumentException(("해당 루트가 존재하지 않습니다.")));
 
         route.updateRouteName(routeName);
         return route.getRouteName();
     }
 
     @Transactional
-    public LocalDate updateRouteDay(Long id, LocalDate routeDay) {
-        Route route = routeRepository.findById(id)
+    public LocalDate updateRouteDay(Long routeId, LocalDate routeDay) {
+        Route route = routeRepository.findById(routeId)
                 .orElseThrow(() -> new IllegalArgumentException(("해당 루트가 존재하지 않습니다.")));
 
         route.updateRouteDay(routeDay);
         return route.getRouteDay();
     }
 
-    @Transactional
-    public void deleteRoute(Long id) {
-        Route route = routeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(("해당 Route 가  존재하지 않습니다.")));
-
-        routeRepository.delete(route);
-    }
-
     @Transactional // 루트 공개 여부
-    public Boolean updateRoutePrivate(Long id, Boolean isPrivate) {
-        Route route = routeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(("해당 Route 가  존재하지 않습니다.")));
+    public Boolean updateRoutePrivate(Long routeId, Boolean isPrivate) {
+        Route route = routeRepository.findById(routeId)
+                .orElseThrow(() -> new IllegalArgumentException(("해당 루트가 존재하지 않습니다.")));
 
         route.updateRoutePrivate(isPrivate);
         return route.getIsPrivate();
+    }
+
+    @Transactional
+    public void deleteRoute(Long routeId) {
+        Route route = routeRepository.findById(routeId)
+                .orElseThrow(() -> new IllegalArgumentException(("해당 루트가  존재하지 않습니다.")));
+
+        routeRepository.delete(route);
     }
 }
 

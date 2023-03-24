@@ -3,7 +3,6 @@ package com.example.travelnode.controller;
 import com.example.travelnode.entity.RoleType;
 import com.example.travelnode.entity.User;
 import com.example.travelnode.oauth2.entity.UserPrincipal;
-import com.example.travelnode.repository.UserRepository;
 import com.example.travelnode.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

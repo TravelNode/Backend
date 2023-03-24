@@ -1,8 +1,6 @@
 
 package com.example.travelnode.entity;
 
-import com.example.travelnode.dto.RouteDayUpdateRequestDto;
-import com.example.travelnode.dto.RouteNameUpdateRequestDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Builder;
