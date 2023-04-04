@@ -1,8 +1,11 @@
 package com.example.travelnode.S3;
 
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +54,18 @@ public class S3Uploader {
         );
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
+
+    public void deleteFile(String deleteFile) {
+        try {
+            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest((bucket, deleteFile);
+            amazonS3Client.deleteObject(deleteObjectRequest);
+        } catch (AmazonServiceException e) {
+            e.printStackTrace();
+        } catch (SdkClientException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void removeNewFile(File targetFile) {
         if(targetFile.delete()) {
