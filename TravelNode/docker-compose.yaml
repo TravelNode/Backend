@@ -1,11 +1,12 @@
+
 version: '3.8'
 services:
   mysqldb:
     image: mysql
     restart: always
     environment:
-      MYSQL_DATABASE: database
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: travel_node
+      MYSQL_ROOT_PASSWORD:
     ports:
       - 3306:3306
 
@@ -13,9 +14,9 @@ services:
     build: .
     restart: always
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/database
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/travel_node
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_PASSWORD:
     ports:
       - 8080:8080
     depends_on:
