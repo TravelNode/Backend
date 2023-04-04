@@ -1,5 +1,6 @@
 package com.example.travelnode.controller;
 
+import com.example.travelnode.dto.ImageChangeDto;
 import com.example.travelnode.entity.Comment;
 import com.example.travelnode.entity.Review;
 import com.example.travelnode.service.ReviewService;
@@ -35,6 +36,11 @@ public class ReviewController {
     public String updateReviewText(@PathVariable Long reviewId, @RequestBody String reviewText) {
 
         return reviewService.changeReviewText(reviewId, reviewText);
+    }
+
+    @PatchMapping("/update/image/{reviewId}")
+    public Long updateImage(@PathVariable Long reviewId, @RequestBody ImageChangeDto updateimg) {
+        return reviewService.changeImage(reviewId, updateimg);
     }
 
     @DeleteMapping("/delete/{reviewId}")

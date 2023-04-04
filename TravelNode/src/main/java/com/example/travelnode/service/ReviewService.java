@@ -1,6 +1,7 @@
 package com.example.travelnode.service;
 
 import com.example.travelnode.S3.S3Uploader;
+import com.example.travelnode.dto.ImageChangeDto;
 import com.example.travelnode.dto.ReviewRequestDto;
 import com.example.travelnode.entity.Comment;
 import com.example.travelnode.entity.Image;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -98,6 +100,49 @@ public class ReviewService {
     }
 
     // 이미지 수정 method 필요
+    public Long changeImage(Long reviewId, ImageChangeDto imgDto) throws IOException {
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() ->
+                new IllegalArgumentException(("해당 리뷰가 존재하지 않습니다.")));
+
+        List<String> delImgs = imgDto.getDelimg();
+        List<Image> updateImgs = new ArrayList<>();
+        List<Image> orgImgs = review.getReviewImages();  // 원래 review의 사진들
+
+        //orgImgs.setCast(reviewDto.getCast());
+        //orgImgs.setContent(reviewDto.getContent());
+        //orgImgs.setRating(reviewDto.getRating());
+        //orgImgs.setViewingDate(reviewDto.getViewingDate());
+
+        for(int i = 0; i < orgImgs.size(); i++) {   // 삭제할 이미지 찾기
+            boolean e = false;  // 현재 검사하는 이미지가 삭제 대상 이미지인지
+            for(int j = 0; j < delImgs.size(); j++) {
+                if(orgImgs.get(i).getImgKey().equals(delImgs.get(j))){   // 대상 이미지 url이 삭제 대상인지 확인
+                    e = true;
+                    S3Uploader.deleteFile(orgImgs.get(i).getImgUrl());
+                }
+            }
+            if(!e) {
+                //Image updateImg = orgImgs.get(i);
+                //updateImg.setReview(orgReview);
+                //updateImgs.add(boardImg);
+            }
+        }
+
+        if(!Objects.isNull(imgDto.getChangeimg()) && !imgDto.getChangeimg().get(0).isEmpty())
+            for(MultipartFile m : imgDto.getChangeimg()) {
+                Image newImg = S3Uploader.upload(m, "review");
+                newImg.setReview(review);
+                imgRepository.save(newImg);
+                updateImgs.add(newImg);
+            }
+
+        review.getReviewImages().clear();
+        review.getReviewImages().addAll(updateImgs);
+
+        return reviewRepository.save(review).getReviewId();
+
+    }
+
 
     @Transactional
     public void deleteReview(Long reviewId) {
@@ -106,4 +151,6 @@ public class ReviewService {
 
         reviewRepository.delete(review);
     }
+
+
 }
