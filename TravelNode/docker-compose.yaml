@@ -1,23 +1,19 @@
-
 version: '3.8'
 services:
-  mysqldb:
-    image: mysql
-    restart: always
-    environment:
-      MYSQL_DATABASE: travel_node
-      MYSQL_ROOT_PASSWORD:
-    ports:
-      - 3306:3306
-
   backend:
     build:
+      context: .
+      dockerfile: ./Dockerfile
     restart: always
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/travel_node
+      MYSQL_HOST: jdbc:mysql://database-3.c1eghvideogz.ap-northeast-2.rds.amazonaws.com:3306?/travel_node?characterEncoding=UTF-8
+      # SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/travel_node
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD:
+      SPRING_DATASOURCE_PASSWORD: 20220630
     ports:
       - 8080:8080
-    depends_on:
-      - mysqldb
+    networks:
+      - spring-network
+
+networks:
+  spring-network:

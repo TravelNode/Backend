@@ -1,6 +1,7 @@
 package com.example.travelnode.repository;
 
 import com.example.travelnode.dto.UserInfoDto;
+import com.example.travelnode.entity.Route;
 import com.example.travelnode.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.uniqueId = ?1")
     User findByUniqueId(String uniqueId);
+
+    @Query("select u from User u join fetch u.route")
+    List<User> findAllUsers();
 }

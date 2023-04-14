@@ -34,12 +34,11 @@ public class ReviewController {
 
     @PatchMapping("/update/review-text/{reviewId}")
     public String updateReviewText(@PathVariable Long reviewId, @RequestBody String reviewText) {
-
         return reviewService.changeReviewText(reviewId, reviewText);
     }
 
     @PatchMapping("/update/image/{reviewId}")
-    public Long updateImage(@PathVariable Long reviewId, @RequestBody ImageChangeDto updateimg) {
+    public Long updateImage(@PathVariable Long reviewId, @RequestBody ImageChangeDto updateimg) throws IOException {
         return reviewService.changeImage(reviewId, updateimg);
     }
 

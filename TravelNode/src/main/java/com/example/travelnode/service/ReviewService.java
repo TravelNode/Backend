@@ -118,7 +118,7 @@ public class ReviewService {
             for(int j = 0; j < delImgs.size(); j++) {
                 if(orgImgs.get(i).getImgKey().equals(delImgs.get(j))){   // 대상 이미지 url이 삭제 대상인지 확인
                     e = true;
-                    S3Uploader.deleteFile(orgImgs.get(i).getImgUrl());
+                    uploader.deleteFile(orgImgs.get(i).getImgUrl());
                 }
             }
             if(!e) {
@@ -128,19 +128,21 @@ public class ReviewService {
             }
         }
 
+        List<Image> images = new ArrayList<>();
         if(!Objects.isNull(imgDto.getChangeimg()) && !imgDto.getChangeimg().get(0).isEmpty())
-            for(MultipartFile m : imgDto.getChangeimg()) {
-                Image newImg = S3Uploader.upload(m, "review");
-                newImg.setReview(review);
-                imgRepository.save(newImg);
-                updateImgs.add(newImg);
+            for(MultipartFile updateImg : imgDto.getChangeimg()) {
+                //System.out.println(reviewImg);
+                String filename = uploader.upload(updateImg, "reviews");
+                String imgName = updateImg.getOriginalFilename();
+                String imgKey = updateImg.getContentType();
+                Image image = Image.builder().review(review).imgName(imgName).imgKey(imgKey).imgUrl(filename).build();
+                images.add(image);
             }
 
         review.getReviewImages().clear();
         review.getReviewImages().addAll(updateImgs);
 
         return reviewRepository.save(review).getReviewId();
-
     }
 
 
